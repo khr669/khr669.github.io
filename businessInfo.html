@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css"/>
+		<link href="css/reset.css" rel="stylesheet">
+		<link href="css/businessInfo.css" rel="stylesheet">
+		<script src="js/vue.js"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<title>饿了么 商家信息</title>
+	</head>
+	<body>
+		<div class="wrapper" id="busInfo">
+			
+			<!-- header部分 -->
+			<header>
+				<p>商家信息</p>
+			</header>
+			
+			<!-- 商家logo部分 -->
+			<div class="business-logo">
+				<img v-bind:src="bs.img">
+			</div>
+			
+			<!-- 商家信息部分 -->
+			<div class="business-info">
+				<h1>{{bs.name}}</h1>
+				<p>&#165;{{bs.startPrice}}起送 &#165;{{bs.deliveryPrice}}配送</p>
+				<p>各种饺子炒菜</p>
+			</div>
+			
+			<!-- 食品列表部分 -->
+			<ul class="food">
+				<li v-for="fd in bs.fds">
+					<div class="food-left">
+						<img v-bind:src="fd.img">
+						<div class="food-left-info">
+							<h3>{{fd.name}}</h3>
+							<p>{{fd.explain}}</p>
+							<p>&#165;{{fd.price}}</p>
+						</div>
+					</div>
+					<div class="food-right">
+						<div>
+							<i class="fa fa-minus-circle" @click="minus(fd)" v-bind:style="fd.display"></i>
+						</div>
+						<p v-bind:style="fd.display"><span >{{fd.num}}</span></p>
+						<div>
+							<i class="fa fa-plus-circle" @click="plus(fd)"></i>
+						</div>
+					</div>
+				</li>
+			</ul>
+			<div class='foodcart'></div>
+			<!-- 购物车部分 -->
+			<div class="cart">
+				<div class="cart-left">
+					<div class="cart-left-icon">
+						<i class="fa fa-shopping-cart"></i>
+						<div class="cart-left-icon-quantity">3</div>
+					</div>
+					<div class="cart-left-info">
+						<p>&#165;12.88</p>
+						<p>另需配送费3元</p>
+					</div>
+				</div>
+				<div class="cart-right">
+					<!-- 不够起送费 -->
+					<!--
+					<div class="cart-right-item">
+						&#165;15起送
+					</div>
+					-->
+					<!-- 达到起送费 -->
+					<div class="cart-right-item" @click="qjs()">
+					    去结算
+					</div>
+				</div>
+			</div>
+			
+		</div>	
+	</body>
+</html>
+<script>
+	var busInfo = new Vue(
+		{
+			el: '#busInfo',
+			data: {
+				bs: ''
+			},
+	
+			mounted: function(){
+				axios.get('http://localhost:8082/busInfo' + window.location.search)
+					  .then(function (response) {
+							busInfo.bs = response.data;
+					  })
+					  .catch(function (error) {
+						console.log(error);
+					  });
+			},
+			methods:{
+				minus(fd){
+					fd.num = fd.num - 1;
+					if(fd.num == 0)fd.display = "display: none";
+					
+				},
+				plus(fd){
+					fd.num = fd.num + 1;
+					fd.display = "display: inline";
+				},
+				qjs(){
+					busInfo.bs.userId = sessionStorage.getItem("userId");
+					axios.post('http://localhost:8082/saveOrder', busInfo.bs)
+						  .then(function (response) {
+								if(response.data == 'ok'){
+									sessionStorage.setItem('bid',busInfo.bs.id);
+									window.location.href='order.html';
+								}
+						  })
+						  .catch(function (error) {
+							console.log(error);
+						  });
+				}
+			}
+		}
+	);
+</script>

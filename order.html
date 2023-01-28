@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css"/>
+		<link href="css/reset.css" rel="stylesheet">
+		<link href="css/order.css" rel="stylesheet">
+		<script src="js/vue.js"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<title>饿了么 确认订单</title>
+	</head>
+	<body>
+		<div class="wrapper" id="order">
+			
+			<!-- header部分 -->
+			<header>
+				<p>确认订单</p>
+			</header>
+		
+			<!-- 订单信息部分 -->
+			<div class="order-info">
+				<h5>订单配送至：</h5>
+				<div class="order-info-address">
+					<p>沈阳市浑南区智慧四街1-121号</p>
+					<i class="fa fa-angle-right"></i>
+				</div>
+				<p>习近平先生 13656785432</p>
+			</div>
+			
+			<h3>{{orders.name}}</h3>
+
+			<!-- 订单明细部分 -->
+			<ul class="order-detailed">
+				<li v-for="fd in orders.fds">
+					<div class="order-detailed-left">
+						<img v-bind:src="fd.img">
+						<p>{{fd.name}} x {{fd.num}}</p>
+					</div>
+					<p>&#165;{{fd.tPrice}}</p>
+				</li>
+			</ul>
+			<div class="order-deliveryfee">
+				<p>配送费</p>
+				<p>&#165;{{orders.deliveryPrice}}</p>
+			</div>
+			
+			<!-- 合计部分 -->
+			<div class="total">
+				<div class="total-left">
+					&#165;49
+				</div>
+				<div class="total-right" onclick="location.href='payment.html'">
+					去支付
+				</div>
+			</div>
+		</div>	
+	</body>
+</html>
+<script>
+	var order = new Vue(
+		{
+			el: '#order',
+			data: {
+				orders: ''
+			},
+			mounted: function(){
+	
+				var path = 'http://localhost:8080/order?userId='+sessionStorage.getItem('userId')+'&bid='+sessionStorage.getItem('bid');
+				axios.get(path)
+					  .then(function (response) {
+							order.orders = response.data;
+					  })
+					  .catch(function (error) {
+						console.log(error);
+					  });
+			}
+		}
+	);
+</script>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css"/>
+		<link href="css/reset.css" rel="stylesheet">
+		<link href="css/businessList.css" rel="stylesheet">
+		<title>饿了么 商家列表</title>
+		<script src="js/vue.js"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	</head>
+	<body>
+		<div class="wrapper" id="busList">
+			
+			<!-- header部分 -->
+			<header>
+				<p>商家列表</p>
+			</header>
+			
+			<!-- 商家列表部分 -->
+			<ul class="business">
+				<li v-for="bs in bss" @click="toBusInfo(bs.id)">
+					<div class="business-img">
+						<img v-bind:src="bs.img">
+						<div class="business-img-quantity">3</div>
+					</div>
+					<div class="business-info">
+						<h3>{{bs.name}}</h3>
+						<p>&#165;{{bs.starPrice}}起送 | &#165;{{bs.deliveryPrice}}配送</p>
+						<p>各种饺子炒菜</p>
+					</div>
+				</li>
+			</ul>
+			
+			<!-- 底部菜单部分 -->
+			<ul class="footer">
+				<li onclick="location.href='index.html'">
+					<i class="fa fa-home"></i>
+					<p>首页</p>
+				</li>
+				<li>
+					<i class="fa fa-compass"></i>
+					<p>发现</p>
+				</li>
+				<li onclick="location.href='orderList.html'">
+					<i class="fa fa-file-text-o"></i>
+					<p>订单</p>
+				</li>
+				<li>
+					<i class="fa fa-user-o"></i>
+					<p>我的</p>
+				</li>
+			</ul>
+			
+		</div>
+	</body>
+</html>
+<script>
+var busList = new Vue(
+		{
+			el: '#busList',
+			data: {
+				bss:''
+			},
+			mounted: function(){
+				axios.get('http://localhost:8082/busList'+ window.location.search)
+					  .then(function (response) {
+							busList.bss = response.data;
+					  })
+					  .catch(function (error) {
+						console.log(error);
+					  });
+			},
+			methods:{
+				toBusInfo(id){
+					window.location.href='businessInfo.html?id='+id
+				}
+			}
+		}
+	);
+</script>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+		<link rel="stylesheet" type="text/css" href="css/reset.css" />
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="js/vue.js"></script>
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div class="wrap" id="app">
+
+			<div class="head">
+				<i class="fa fa-map-marker" aria-hidden="true"></i>
+				<h3>北华航天工业学院</h3>
+				<i class="fa fa-caret-down" aria-hidden="true"></i>
+			</div>
+
+			<div class="search">
+				<div class="searchText">
+					<i class="fa fa-search" aria-hidden="true"></i>
+					<p>搜索饿了么商家、商品名称</p>
+				</div>
+			</div>
+			
+			<ul class="businessType">
+				<li v-for="bt in info.bts" @click="toBusList(bt.id)">
+					<img v-bind:src='bt.img'>
+					<p>{{bt.name}}</p>
+				</li>
+
+			</ul>
+
+			<div class="banner">
+				<h3>品质套餐</h3>
+				<p>搭配齐全吃的好</p>
+				<a href="">立即抢购></a>
+			</div>
+
+			<div class="supermember">
+				<div class="supermember-left">
+					<img src="img/super_member.png">
+					<h4>超级会员 ·</h4>
+					<p>每日享超值权益</p>
+				</div>
+				<div class="supermember-right">
+					<a href="">立即开通></a>
+				</div>
+
+			</div>
+
+			<div class="recommend">
+				<div></div>
+				<h4>推荐商家</h4>
+				<div></div>
+			</div>
+
+			<ul class="recommendType">
+				<p>综合排序<i class='fa fa-caret-down'></i></p>
+				<p>距离最近</p>
+				<p>销量最高</p>
+				<p>筛选<i class="fa fa-filter"></i></p>
+			</ul>
+
+			<ul class="business">
+				<li v-for="bs in info.bss">
+					<div class="business-life">
+						<img v-bind:src="bs.img">
+					</div>
+					<div class="business-right">
+						<div class="businessHead">
+							<h3>{{bs.name}}</h3>
+							<p><i class="fa fa-mobile"></i></p>
+						</div>
+						<div class="businessStar">
+							<div class="businessStarLeft">
+								<i class="fa fa-star"></i>
+								<i class="fa fa-star"></i>
+								<i class="fa fa-star"></i>
+								<i class="fa fa-star"></i>
+								<i class="fa fa-star"></i>
+								<p>4.9 月售345单</p>
+
+							</div>
+							<div class="businessStarRight">
+								蜂鸟专送
+							</div>
+						</div>
+						<div class="businessDeliver">
+							<div class="businessDeliverLeft">
+								<i class="fa fa-jpy"></i>{{bs.startPrice}}起送 | {{bs.deliverPrice}}<i
+									class="fa fa-jpy"></i>配送
+							</div>
+							<div class="businessDeliverRight">
+								3.22km | 30min
+							</div>
+						</div>
+						<div class="businessExplain">
+							<span>{{bs.explain}}</span>
+						</div>
+						<div class="businessNew">
+							<div class="businessNewLeft">
+								<div class="businessNewLeftXin">新</div>
+								<p>饿了么首单立减9元</p>
+							</div>
+							<div class="businessNewRight">
+								<div class="businessNewLeftXin">新</div>
+								<p>饿了么首单立减5元</p>
+							</div>
+						</div>
+						<div class="businessTe">
+							<div>特</div>
+							<p>特价商品5元起</p>
+						</div>
+					</div>
+				</li>
+			</ul>
+			<div class="divfoot"></div>
+			<ul class="foot">
+				<li>
+					<p><i class="fa fa-home"></i></p>
+					<p>首页</p>
+				</li>
+				<li>
+					<p><i class="fa fa-compass"></i></p>
+					<p>发现</p>
+				</li>
+				<li>
+					<p><i class="fa fa-file-text-o"></i></p>
+					<p>订单</p>
+				<li>
+					<p><i class="fa fa-user-o"></i></p>
+					<p>我的</p>
+				</li>
+			</ul>
+		</div>
+	</body>
+	
+</html>
+
+<script>
+	var index = new Vue({
+		el: '#app',
+		data: {
+			info: 1
+		},
+		mounted: function(){
+			axios.get('http://localhost:8080/index')
+			.then(function(response) {
+				index.info = response.data;
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+		},
+		methods:{
+			toBusList(id){
+			
+				window.location.href='businessList.html?id='+id
+			}
+		}
+	});
+</script>
